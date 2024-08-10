@@ -22,7 +22,7 @@ public class SampleController {
         }
         return output;
     }
-
+//Sample line
     @GetMapping("/bye")
     public String sayBye(){
         return "Bye Everyone";
