@@ -27,16 +27,16 @@ public class GlobalExceptionHandler {
         return responseEntity;
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ExceptionDto> handleRuntimeException(){
-        ExceptionDto exceptionDto=new ExceptionDto();
-        exceptionDto.setMessage("RunTime Error");
-        exceptionDto.setSolution("Try again from Controller Advice");
-        ResponseEntity<ExceptionDto> responseEntity=new ResponseEntity<>(
-                exceptionDto,HttpStatus.FORBIDDEN
-        );
-        return responseEntity;
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<ExceptionDto> handleRuntimeException(){
+//        ExceptionDto exceptionDto=new ExceptionDto();
+//        exceptionDto.setMessage("RunTime Error");
+//        exceptionDto.setSolution("Try again from Controller Advice");
+//        ResponseEntity<ExceptionDto> responseEntity=new ResponseEntity<>(
+//                exceptionDto,HttpStatus.FORBIDDEN
+//        );
+//        return responseEntity;
+//    }
 
 
     @ExceptionHandler(ProductNotFoundException.class)

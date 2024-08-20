@@ -1,10 +1,12 @@
-package com.scaler.productservice.inheritanceTypes.joinedTable;
+package com.scaler.productservice.inheritanceTypes.tablePerClass;
 
+import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Mentor {
+@Entity(name="tpc_Mentor")
+public class Mentor extends User{
     private String company;
 }
