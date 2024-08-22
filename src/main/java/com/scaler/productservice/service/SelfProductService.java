@@ -7,6 +7,7 @@ import com.scaler.productservice.repositories.CategoryRepository;
 import com.scaler.productservice.repositories.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,8 +33,8 @@ public class SelfProductService implements ProductService{
 
     @Override
     public Page<Product> getAllProducts(int page, int size) throws ProductNotFoundException {
-        PageRequest.of(page, size);
-        Page<Product> products = productRepository.findAll();
+        Sort sort = Sort.by("price").ascending().and(Sort.by("title").ascending());
+        Page<Product> products = productRepository.findAll(PageRequest.of(page, size, sort));
         return products;
     }
 
@@ -65,7 +66,7 @@ public class SelfProductService implements ProductService{
 
     @Override
     public void deleteProduct(long id) {
-       productRepository.deleteById((int) id);
+      // productRepository.deleteById((int) id);
       //Optional<> optional= ProductRepository.deleteById(id);
     }
 
