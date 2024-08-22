@@ -5,6 +5,7 @@ import com.scaler.productservice.models.Product;
 import com.scaler.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +16,9 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    ProductService productService;
+   private ProductService productService;
 
-    ProductController(@Qualifier("SelfProductService") ProductService productService) {
+   public ProductController(@Qualifier("selfProductService") ProductService productService) {
         this.productService = productService;
     }
 
@@ -30,11 +31,8 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        ResponseEntity<List<Product>> responseEntity= new ResponseEntity<>(
-                productService.getAllProducts(),HttpStatus.OK
-        );
-        return responseEntity;
+    public Page<Product> getAllProducts(@RequestParam("pageNumber") int page, @RequestParam("pageSize") int size) throws ProductNotFoundException {
+        return productService.getAllProducts(page, size);
     }
 
     @PatchMapping("/{id}")

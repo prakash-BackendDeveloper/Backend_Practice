@@ -5,15 +5,18 @@ import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import com.scaler.productservice.repositories.CategoryRepository;
 import com.scaler.productservice.repositories.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service("SelfProductService")
+@Service("selfProductService")
 public class SelfProductService implements ProductService{
-    CategoryRepository categoryRepository;
-    ProductRepository productRepository;
+    private CategoryRepository categoryRepository;
+    private ProductRepository productRepository;
+
     public SelfProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
@@ -28,8 +31,9 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        List<Product> products = productRepository.findAll();
+    public Page<Product> getAllProducts(int page, int size) throws ProductNotFoundException {
+        PageRequest.of(page, size);
+        Page<Product> products = productRepository.findAll();
         return products;
     }
 
@@ -67,11 +71,11 @@ public class SelfProductService implements ProductService{
 
     @Override
     public Product addProduct(Product product) {
-        Category category=product.getCategory();
-        if(category.getId() == 0) {
-            category=categoryRepository.save(category);
-            product.setCategory(category);
-        }
+//        Category category=product.getCategory();
+//        if(category.getId() == 0) {
+//            category=categoryRepository.save(category);
+//            product.setCategory(category);
+//        }
         return productRepository.save(product);
     }
 }
