@@ -4,8 +4,10 @@ import com.scaler.productservice.dtos.FakeStoreDto;
 import com.scaler.productservice.exception.ProductNotFoundException;
 import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
@@ -18,20 +20,32 @@ import java.util.List;
 @Service("FakeStoreProductService")
 public class FakeStoreProductService implements ProductService{
 
+    private final RedisTemplate redisTemplate;
     RestTemplate restTemplate;
 
-    FakeStoreProductService(RestTemplate restTemplate) {
+    FakeStoreProductService(RestTemplate restTemplate, @Qualifier("redisTemplate") RedisTemplate redisTemplate) {
         this.restTemplate = restTemplate;
+        this.redisTemplate = redisTemplate;
     }
     @Override
     public Product getSingleProduct(long id) throws ProductNotFoundException {
+
+        Product product = (Product) redisTemplate.opsForHash().get("Products","Product_"+id);
+        if (product != null) {
+            return product;
+        }
         FakeStoreDto fakeStoreDto=restTemplate.getForObject(
                 "https://fakestoreapi.com/products/"+id , FakeStoreDto.class
         );
         if(fakeStoreDto==null){
             throw new ProductNotFoundException(id);
         }
-        return convertFakeStoreDtoToProduct(fakeStoreDto);
+        Product product1=convertFakeStoreDtoToProduct(fakeStoreDto);
+
+        //store it in redis then return the product
+        redisTemplate.opsForHash().put("Products","Product_"+id,product1);
+        return product1;
+
 
      }
 
